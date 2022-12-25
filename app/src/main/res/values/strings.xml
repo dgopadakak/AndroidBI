@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">AndroidBI</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="name">Название:</string>
+    <string name="hint">Подсказка:</string>
+    <string name="num">Номер:</string>
+    <string name="num_of_participants">Количество участников:</string>
+    <string name="time_for_solve">Время решения:</string>
+    <string name="max_score">Максимальный балл:</string>
+    <string name="is_complicated">Усложненный:</string>
+    <string name="condition">Условие:</string>
+    <string name="button_ok">Ок</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_del">Удалить</string>
+    <string name="button_edit">Изменить</string>
+    <string name="name_hint">Название</string>
+    <string name="hint_hint">Подсказка</string>
+    <string name="num_hint">Номер</string>
+    <string name="num_of_participants_hint">Кол-во участников</string>
+    <string name="time_for_solve_hint">Время на решение</string>
+    <string name="max_score_hint">Максимальный балл</string>
+    <string name="is_complicated_hint">Да/Нет</string>
+    <string name="condition_hint">Введите условие</string>
+    <string name="plus_button_description">Добавить задание</string>
+    <string name="plus">➕</string>
+</resources>
