@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
@@ -89,11 +90,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     override fun onItemClick(view: View, position: Int)
                     {
                         currentTaskID = position
-                        Snackbar.make(findViewById(R.id.app_bar_main),
+                        val toast = Toast.makeText(
+                            applicationContext,
                             "Количество участников: ${ro.getTask(currentRoundID, currentTaskID)
                                 .numOfParticipants}",
-                            Snackbar.LENGTH_LONG)
-                            .show()
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
                     }
                     override fun onItemLongClick(view: View, position: Int)
                     {
