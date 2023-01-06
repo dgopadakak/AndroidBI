@@ -222,7 +222,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             "Подключиться не удалось!\n" +
                                     "Будет использоваться локальная база данных.",
                             Snackbar.LENGTH_LONG)
-                            .setBackgroundTint(Color.YELLOW)
                             .show() }
                         connectionStage = -1
                         activity.runOnUiThread { progressBar.visibility = View.INVISIBLE }
@@ -263,7 +262,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             {
                 nv.menu.removeItem(i)
             }
-            val tempArrayListRounds: ArrayList<Round> = /*dbh.getAllData()*/tempGo.getRounds()
+            val tempArrayListRounds: ArrayList<Round> = tempGo.getRounds()
             ro.setRounds(tempArrayListRounds)
             for (i in 0 until tempArrayListRounds.size)
             {
