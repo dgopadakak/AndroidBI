@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
@@ -53,6 +54,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerViewTasks: RecyclerView
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts
+        .StartActivityForResult())
+    { result ->
+        if (result.resultCode == Activity.RESULT_OK)
+        {
+            val data: Intent? = result.data
+            processOnActivityResult(data)
+        }
+    }
 
     private var ro: RoundOperator = RoundOperator()
     private var currentRoundID: Int = -1
@@ -150,7 +160,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent()
             intent.setClass(this, EditTaskActivity::class.java)
             intent.putExtra("action", 1)
-            startActivityForResult(intent, 1)
+            resultLauncher.launch(intent)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -363,7 +373,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             intent.putExtra("maxScore", tempTask.maxScore.toString())
             intent.putExtra("isComplicated", tempTask.isComplicated.toString())
             intent.putExtra("condition", tempTask.condition)
-            startActivityForResult(intent, 1)
+            resultLauncher.launch(intent)
         }
         recyclerViewTasks.adapter = CustomRecyclerAdapterForExams(
             ro.getTasksNames(currentRoundID),
@@ -371,37 +381,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ro.getTaskMaxScore(currentRoundID))
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    private fun processOnActivityResult(data: Intent?)
     {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK)
-        {
-            val action = data?.getSerializableExtra("action") as Int
-            val examName = data.getSerializableExtra("nameOfTask") as String
-            val teacherName = data.getSerializableExtra("hint") as String
-            val auditory = data.getSerializableExtra("number") as Int
-            val date = data.getSerializableExtra("numOfParticipants") as String
-            val time = data.getSerializableExtra("timeForSolve") as String
-            val people = data.getSerializableExtra("maxScore") as Int
-            val abstract = data.getSerializableExtra("isComplicated") as Int
-            val comment = data.getSerializableExtra("condition") as String
-            val tempTask = Task(examName, teacherName, auditory, date, time, people
-                , abstract, comment)
-            val tempTaskJSON: String = gson.toJson(tempTask)
+        val action = data!!.getIntExtra("action", -1)
+        val taskName = data.getStringExtra("nameOfTask")
+        val hint = data.getStringExtra("hint")
+        val number = data.getIntExtra("number", -1)
+        val numOfParticipants = data.getStringExtra("numOfParticipants")
+        val time = data.getStringExtra("timeForSolve")
+        val maxScore = data.getIntExtra("maxScore", -1)
+        val isComplicated = data.getIntExtra("isComplicated", 0)
+        val condition = data.getStringExtra("condition")
+        val tempTask = Task(taskName!!, hint!!, number, numOfParticipants!!, time!!, maxScore
+            , isComplicated, condition!!)
+        val tempTaskJSON: String = gson.toJson(tempTask)
 
-            if (action == 1)
-            {
-                val tempStringToSend = "a${ro.getRounds()[currentRoundID].name}##$tempTaskJSON"
-                connection.sendDataToServer(tempStringToSend)
-                waitingForUpdate = true
-            }
-            if (action == 2)
-            {
-                val tempStringToSend = "e$currentRoundID,$currentTaskID##$tempTaskJSON"
-                connection.sendDataToServer(tempStringToSend)
-                waitingForUpdate = true
-            }
+        if (action == 1)
+        {
+            val tempStringToSend = "a${ro.getRounds()[currentRoundID].name}##$tempTaskJSON"
+            connection.sendDataToServer(tempStringToSend)
+            waitingForUpdate = true
+        }
+        if (action == 2)
+        {
+            val tempStringToSend = "e$currentRoundID,$currentTaskID##$tempTaskJSON"
+            connection.sendDataToServer(tempStringToSend)
+            waitingForUpdate = true
+        }
+        if (action == -1)
+        {
+            Snackbar.make(findViewById(R.id.app_bar_main),
+                "Ошибка добавления/изменения!",
+                Snackbar.LENGTH_LONG)
+                .setBackgroundTint(Color.GREEN)
+                .show()
         }
     }
 }
